@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const bcrypt = require('bcrypt-nodejs')
+const bcrypt = require('bcryptjs')
 const r = require('rethinkdb')
 require('rethinkdb-init')(r)
 
@@ -9,23 +9,24 @@ r
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    db: process.env.DB_NAME
+    db: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS
   },
   [
     {
-      name: 'users',
-      primaryKey: 'username'
+      name: 'admins',
+      indexes: ['username']
     }
   ]
   )
   .then(conn => {
     r
       .db(process.env.DB_NAME)
-      .table('users')
+      .table('admins')
       .insert({
         username: 'admin',
-        password: bcrypt.hashSync('password'),
-        roll: 0
+        password: bcrypt.hashSync('password')
       })
       .run(conn)
       .then(() => {
@@ -37,7 +38,7 @@ r
         process.exit(1 + Math.ceil(Math.random() * 10))
       })
   })
-  .error(e => {
+  .catch(e => {
     console.log(e)
     process.exit(1 + Math.ceil(Math.random() * 10))
   })

@@ -1,17 +1,23 @@
 doctype html
-html(lang="en")
+html(lang='en')
   head
-    title= 'Login'
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    title Login
+    link(href='/bootstrap.min.css', rel='stylesheet')
+    link(href='/signin.css', rel='stylesheet')
   body
-
-    if (authed)
-      h1 You are logged in!
-      a(href="/logout") Logout!
+    if (!authed)
+      .container
+        form.form-signin(method='post', action='/login')
+          h2.form-signin-heading Please Log In
+          label.sr-only(for='username') Username
+          input#username.form-control(type='text', placeholder='Username', required='required', autofocus='', name='username')
+          label.sr-only(for='password') Password
+          input#password.form-control(type='password', placeholder='Password', required='required', name='password')
+          button.btn.btn-lg.btn-primary.btn-block(type='submit') Login
     else
-      h1 Login!
-      #container
-      p.
-      form(name="login", action="/login", method="post")
-        input(type="text", name="username")
-        input(type="password", name="password")
-        input(type="submit", value="login")
+      a(href='/admin') Go to Admin

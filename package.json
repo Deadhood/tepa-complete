@@ -4,7 +4,7 @@
   "description": "Passport example using local authentication strategy on top of RethinkDB",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env DEBUG=* node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,11 +23,11 @@
   },
   "homepage": "https://github.com/rustysec/node-passportjs-rethinkdb-local#readme",
   "dependencies": {
-    "bcrypt-nodejs": "0.0.3",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.15.2",
+    "connect-ensure-login": "^0.1.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
-    "cross-env": "^5.0.0",
     "dotenv": "^4.0.0",
     "express": "^4.14.0",
     "express-session": "^1.13.0",

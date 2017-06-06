@@ -1,26 +1,31 @@
-const path = require('path')
-require('dotenv').config()
+if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 
 const config = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
-  db: process.env.DB_NAME
+  db: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS
 }
 
-const express = require('express')
-const passport = require('passport')
+const path = require('path')
+const Express = require('express')
+const Passport = require('passport')
 const flash = require('connect-flash')
 const bodyParser = require('body-parser')
+const { ensureLoggedIn } = require('connect-ensure-login')
 const { Strategy: LocalStrategy } = require('passport-local')
 
 const r = require('rethinkdb')
 require('rethinkdb-init')(r)
-const app = express()
+const app = new Express()
 
-app.use(require('morgan')('combined'))
+if (process.env.NODE_ENV !== 'production') { app.use(require('morgan')('combined')) }
+
 app.use(require('cookie-parser')())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(Express.static(path.join(__dirname, 'public')))
 app.use(
   require('express-session')({
     secret: process.env.ESESSION_SECRET,
@@ -29,21 +34,22 @@ app.use(
   })
 )
 
+const localRethinkStrategy = require('./utils/local-strategy')(r, config.db)
+
 // Initialize Passport and restore authentication state, if any, from the
 // session.
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(Passport.initialize())
+app.use(Passport.session())
 app.use(flash())
 
-app.set('views', path.join(__dirname, '/views'))
+app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 // Setup our db so we can get started
 r
   .init(config, [
     {
-      name: 'users',
-      primaryKey: 'username'
+      name: 'admins'
     }
   ])
   .then(conn => {
@@ -51,18 +57,18 @@ r
   })
 
 // Setup PassportJS local authentication strategy
-passport.use(new LocalStrategy(require('./utils/local-strategy')(r, config.db)))
+Passport.use(new LocalStrategy(localRethinkStrategy))
 
 // Provide a user serialization method
-passport.serializeUser(function (user, done) {
+Passport.serializeUser(function (user, done) {
   done(null, user.id)
 })
 
 // Deserialize the user: Get the record from the db and return it
-passport.deserializeUser(function (id, done) {
+Passport.deserializeUser(function (id, done) {
   r
     .db(config.db)
-    .table('users')
+    .table('admins')
     .filter(r.row('id').eq(id))
     .run(r.conn)
     .then(user => {
@@ -78,20 +84,13 @@ passport.deserializeUser(function (id, done) {
     })
 })
 
-// Utility function to validate authentication has taken place
-function ensureAuthenticated (req, res, next) {
-  if (req.isAuthenticated()) return next()
-  if (req.method === 'GET') req.session.returnTo = req.originalUrl
-  res.redirect('/')
-}
-
 // Setup the views
 app.get('/', function (req, res) {
   res.render('index', { authed: req.isAuthenticated() })
 })
 
-app.get('/secret', ensureAuthenticated, function (req, res) {
-  res.render('secret', { authed: req.isAuthenticated() })
+app.get('/admin', ensureLoggedIn('/'), function (req, res) {
+  res.render('admin', { authed: req.isAuthenticated() })
 })
 
 app.get('/logout', function (req, res) {
@@ -101,12 +100,12 @@ app.get('/logout', function (req, res) {
 
 app.post(
   '/login',
-  passport.authenticate('local', { failureRedirect: '/' }),
+  Passport.authenticate('local', { failureRedirect: '/' }),
   function (req, res) {
-    res.redirect('/secret')
+    res.redirect('/admin')
   }
 )
 
-app.listen(4000, function () {
-  console.log('node-passportjs-rethinkdb-local example listening on port 4000!')
+app.listen(process.env.SERVER_PORT, function () {
+  console.log(`Server listening on port ${process.env.SERVER_PORT}!`)
 })

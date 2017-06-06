@@ -1,10 +1,10 @@
-const bcrypt = require('bcrypt-nodejs')
+const bcrypt = require('bcryptjs')
 
 module.exports = (r, dbname) =>
   function (username, password, done) {
     r
       .db(dbname)
-      .table('users')
+      .table('admins')
       .filter(r.row('username').eq(username))
       .run(r.conn, function (err, user) {
         if (err) {
