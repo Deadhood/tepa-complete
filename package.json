@@ -1,7 +1,7 @@
 {
-  "name": "node-passportjs-rethinkdb-local",
+  "name": "tepa-complete",
   "version": "1.0.0",
-  "description": "Passport example using local authentication strategy on top of RethinkDB",
+  "description": "Tepa backend",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

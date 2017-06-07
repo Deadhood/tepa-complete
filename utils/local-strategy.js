@@ -1,10 +1,10 @@
 const bcrypt = require('bcryptjs')
 
-module.exports = (r, dbname) =>
+module.exports = (r, cfg) =>
   function (username, password, done) {
     r
-      .db(dbname)
-      .table('admins')
+      .db(cfg.database.db)
+      .table(cfg.table.name)
       .filter(r.row('username').eq(username))
       .run(r.conn, function (err, user) {
         if (err) {
