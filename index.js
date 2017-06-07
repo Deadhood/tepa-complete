@@ -93,7 +93,7 @@ app.post(
   }
 )
 
-app.post('/add', ensureLoggedIn('/'), (req, res) => {
+app.post('/add', (req, res) => {
   r
     .db(config.database.db)
     .table(config.dataTable.name)
