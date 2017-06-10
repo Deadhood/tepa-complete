@@ -7,7 +7,6 @@ const { Strategy: LocalStrategy } = require('passport-local')
 const r = require('rethinkdb')
 require('rethinkdb-init')(r)
 
-
 const app = new Express()
 const config = require('./config')
 
@@ -123,7 +122,6 @@ app.get('/view', ensureLoggedIn('/'), (req, res) => {
       res.status(404).json({})
     })
 })
-
 
 app.listen(config.port, function () {
   console.log(`Server listening on port ${config.port}!`)

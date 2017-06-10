@@ -13,6 +13,7 @@ html(lang='en')
   body
     noscript You need to enable JavaScript to run this app.
     #root
-    a(href='/logout', style='text-align: center')
-      h3 Logout
+    if authed
+      a(href='/logout', style='text-align: center')
+        h3 Logout
     script(type='text/javascript', src='/static/bundle.js')

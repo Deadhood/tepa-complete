@@ -6,7 +6,7 @@ const config = require('../config')
 
 r
   .init(config.database, [config.table])
-  .then(conn => {
+  .then(conn =>
     r
       .db(config.database.db)
       .table(config.table.name)
@@ -15,16 +15,12 @@ r
         password: bcrypt.hashSync('password')
       })
       .run(conn)
-      .then(() => {
-        console.log('All Done!')
-        process.exit(0)
-      })
-      .error(e => {
-        console.log(e)
-        process.exit(1 + Math.ceil(Math.random() * 10))
-      })
+  )
+  .then(() => {
+    console.log('All Done!')
+    process.exit(0)
   })
-  .catch(e => {
+  .error(e => {
     console.log(e)
     process.exit(1 + Math.ceil(Math.random() * 10))
   })
