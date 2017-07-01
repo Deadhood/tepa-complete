@@ -1,4 +1,15 @@
-@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700);@import url(https://fonts.maateen.me/mukti/font.css);.App {
+@import url(https://fonts.maateen.me/mukti/font.css);body {
+  margin: 0;
+  padding: 0;
+  font-family: Mukti, Roboto, sans-serif;
+  font-size: 18px;
+}
+
+label {
+  color: #0c7cd6;
+}
+
+.App {
   text-align: left;
   margin: 0 10%;
 }
@@ -15,7 +26,7 @@
   font-size: 1.5em;
 }
 
-/*!
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700);/*!
  * bootswatch v3.3.7
  * Homepage: http://bootswatch.com
  * Copyright 2012-2016 Thomas Park
@@ -8523,17 +8534,6 @@ a.list-group-item-danger.active:focus {
 
 .popover {
   color: #333333;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Mukti, Roboto, sans-serif;
-  font-size: 18px;
-}
-
-label {
-  color: #0c7cd6;
 }
 
 

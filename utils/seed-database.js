@@ -20,7 +20,7 @@ r
     console.log('All Done!')
     process.exit(0)
   })
-  .error(e => {
+  .catch(e => {
     console.log(e)
-    process.exit(1 + Math.ceil(Math.random() * 10))
+    process.exit(1)
   })
