@@ -9,11 +9,10 @@ html(lang='en')
       title= htmlWebpackPlugin.options.title
     else
       title Admin
-    link(href='/static/bundle.css', rel='stylesheet')
+    if !htmlWebpackPlugin
+      link(href='/static/bundle.css', rel='stylesheet')
   body
     noscript You need to enable JavaScript to run this app.
     #root
-    if authed
-      a(href='/logout', style='text-align: center')
-        h3 Logout
-    script(type='text/javascript', src='/static/bundle.js')
+    if !htmlWebpackPlugin    
+      script(type='text/javascript', src='/static/bundle.js')

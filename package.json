@@ -44,6 +44,7 @@
     "react-dom": "^15.6.1",
     "react-jsonschema-form": "^0.49.0",
     "react-router-dom": "^4.1.1",
+    "react-sidenav": "^2.1.1",
     "rethinkdb": "^2.3.2",
     "rethinkdb-init": "^0.2.2"
   },
