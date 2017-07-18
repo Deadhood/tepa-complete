@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+const { fetch } = window
+
 class List extends Component {
   render () {
     return (
@@ -7,6 +9,9 @@ class List extends Component {
         Hello
       </div>
     )
+  }
+
+  componentDidMount () {
   }
 }
 

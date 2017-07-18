@@ -8,11 +8,6 @@ const OUTPUT_DIR = path.resolve(__dirname, 'public', 'static')
 
 const isProd = process.env.NODE_ENV === 'production'
 
-const extractSass = new ExtractTextPlugin({
-  filename: 'bundle.css',
-  disable: !isProd
-})
-
 const webpackConfig = {
   entry: [
     'react-hot-loader/patch',
@@ -29,24 +24,9 @@ const webpackConfig = {
     rules: [
       {
         test: /\.(sass|scss|css)$/,
-        use: extractSass.extract({
+        use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: true
-              }
-            },
-            { loader: 'resolve-url-loader' },
-            {
-              loader: 'sass-loader',
-              options: {
-                sourceMap: true,
-                includePaths: [SRC_DIR]
-              }
-            }
-          ]
+          use: ['css-loader', 'resolve-url-loader', 'sass-loader']
         })
       },
       {
@@ -90,7 +70,10 @@ const webpackConfig = {
         isProd ? 'production' : 'development'
       )
     }),
-    extractSass,
+    new ExtractTextPlugin({
+      filename: 'bundle.css',
+      disable: !isProd
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new HTMLWebpackPlugin({
@@ -111,7 +94,7 @@ if (isProd) {
   webpackConfig.devtool = 'source-map'
   webpackConfig.entry.splice(0, 3, 'core-js')
   webpackConfig.plugins.splice(
-    1,
+    2,
     2,
     new webpack.optimize.UglifyJsPlugin({
       minimize: true,
