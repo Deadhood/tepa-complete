@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-const { fetch } = window
+// const { fetch } = window
 
 class List extends Component {
   render () {

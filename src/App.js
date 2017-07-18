@@ -15,7 +15,12 @@ import List from './List'
 
 const SideNav = withRR4()
 
+@inject('dataStore')
+@withRouter
+@observer
 class App extends Component {
+  dataStore = this.props.dataStore
+
   render () {
     return (
       <div className='App'>
@@ -44,7 +49,7 @@ class App extends Component {
           </div>
         </div>
         <div className='col-sm-9 container-fluid'>
-          <div className='well'>{this.props.dataStore.message}</div>
+          <div className='well'>{this.dataStore.message}</div>
           <Route exact path='/' component={BalagForm} />
           <Route path='/add' component={BalagForm} />
           <Route path='/list' component={List} />
@@ -54,4 +59,4 @@ class App extends Component {
   }
 }
 
-export default inject('dataStore')(withRouter(observer(App)))
+export default App
