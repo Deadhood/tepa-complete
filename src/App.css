@@ -14,3 +14,13 @@
 .form-group legend {
   font-size: 1.5em;
 }
+
+.sidenav-custom {
+  height: 100%;
+  display: block;
+  position: fixed;
+  width: inherit;
+  margin: 0;
+  left: 0;
+  padding: 0;
+}

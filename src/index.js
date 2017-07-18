@@ -20,11 +20,11 @@ const stores = {
 const render = Component => {
   ReactDOM.render(
     <AppContainer>
-      <Provider {...stores}>
-        <Router>
+      <Router>
+        <Provider {...stores}>
           <Component />
-        </Router>
-      </Provider>
+        </Provider>
+      </Router>
     </AppContainer>,
     document.getElementById('root')
   )

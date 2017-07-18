@@ -5,6 +5,8 @@ import { inject, observer } from 'mobx-react'
 import formSchema from './Schema.Data'
 import uiSchema from './Schema.UI'
 
+const { fetch } = window
+
 class BalagForm extends Component {
   constructor (props) {
     super(props)
@@ -24,27 +26,25 @@ class BalagForm extends Component {
     )
   }
 
-  _handleSubmit (data) {
-    this.props.dataStore.formData = data.formData
-    window
-      .fetch('/add', {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.props.dataStore.formData),
-        credentials: 'same-origin'
-      })
-      .then(res => {
-        if (res.status === 200) {
-          this.props.dataStore.message = 'Success'
-          data.formData = {}
-          this.setState({fd: null})
-        } else {
-          this.props.dataStore.message = 'Failed'
-        }
-        document.body.scrollTop = 0
-      })
+  _handleSubmit ({ formData }) {
+    Object.assign(this.props.dataStore, { formData })
+    fetch('/add', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.props.dataStore.formData),
+      credentials: 'same-origin'
+    }).then(res => {
+      if (res.status === 200) {
+        this.props.dataStore.message = 'Success'
+        formData = {}
+        this.setState({ fd: null })
+      } else {
+        this.props.dataStore.message = 'Failed'
+      }
+      document.body.scrollTop = 0
+    })
   }
 }
 
