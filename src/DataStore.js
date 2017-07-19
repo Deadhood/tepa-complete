@@ -1,6 +1,10 @@
-import { observable } from 'mobx'
+import { extendObservable } from 'mobx'
 
 export default class DataStore {
-  @observable formData = null
-  @observable message = null
+  constructor () {
+    extendObservable(this, {
+      formData: null,
+      message: ''
+    })
+  }
 }

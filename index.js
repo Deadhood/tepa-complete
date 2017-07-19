@@ -108,13 +108,20 @@ app.post('/add', ensureLoggedIn('/'), (req, res) => {
 })
 
 app.get('/view', ensureLoggedIn('/'), (req, res) => {
+  const query = {}
+  if (req.query) {
+    for (let it in req.query) {
+      const val = req.query[it]
+      query[it] = isNaN(Number(val)) ? val : Number(val)
+    }
+  }
   r
     .db(config.database.db)
     .table(config.dataTable.name)
+    .filter(query)
     .run(r.conn)
     .then(r => r.toArray())
     .then(data => {
-      console.log(data)
       res.json(data)
     })
     .error(e => {

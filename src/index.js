@@ -37,5 +37,3 @@ if (module.hot) {
     render(App)
   })
 }
-
-registerServiceWorker()

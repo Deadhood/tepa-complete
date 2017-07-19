@@ -13,6 +13,7 @@ const webpackConfig = {
     'react-hot-loader/patch',
     'webpack-dev-server/client?http://localhost:9000',
     'webpack/hot/only-dev-server',
+    'babel-polyfill',
     path.join(SRC_DIR, 'index.js')
   ],
   output: {
@@ -92,7 +93,7 @@ const webpackConfig = {
 
 if (isProd) {
   webpackConfig.devtool = 'source-map'
-  webpackConfig.entry.splice(0, 3, 'core-js')
+  webpackConfig.entry.splice(0, 3)
   webpackConfig.plugins.splice(
     2,
     2,
