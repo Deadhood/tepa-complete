@@ -1,0 +1,7 @@
+.taxPage table th {
+  display: table-row;
+}
+
+.taxPage table td {
+  border: 1px solid #333;
+}

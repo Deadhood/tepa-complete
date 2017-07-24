@@ -7,11 +7,13 @@ import { Route, withRouter } from 'react-router-dom'
 // Icons
 import MdGroupAdd from 'react-icons/lib/md/group-add'
 import MdViewList from 'react-icons/lib/md/view-list'
+import MdAddBox from 'react-icons/lib/md/add-box'
 
 import './App.css'
 
 import BalagForm from './BalagForm'
 import List from './List'
+import Tax from './Tax'
 
 const SideNav = withRR4()
 
@@ -45,6 +47,10 @@ class App extends Component {
                 <NavIcon><MdViewList /></NavIcon>
                 <NavText>Show Records</NavText>
               </Nav>
+              <Nav id='tax'>
+                <NavIcon><MdAddBox /></NavIcon>
+                <NavText>Tax Calculations</NavText>
+              </Nav>
             </SideNav>
           </div>
         </div>
@@ -53,6 +59,7 @@ class App extends Component {
           <Route exact path='/' component={BalagForm} />
           <Route path='/add' component={BalagForm} />
           <Route path='/list' component={List} />
+          <Route path='/tax' component={Tax} />
         </div>
       </div>
     )

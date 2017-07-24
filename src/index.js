@@ -6,9 +6,8 @@ import { HashRouter as Router } from 'react-router-dom'
 
 import App from './App'
 import DataStore from './DataStore'
-import registerServiceWorker from './registerServiceWorker'
 
-import 'bootswatch/cosmo/bootstrap.css'
+import 'bootswatch/cosmo/bootstrap.min.css'
 import './font.css'
 import './index.css'
 import './navbar-fixed-side.css'
