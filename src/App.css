@@ -3,6 +3,10 @@
   margin: 0 auto;
 }
 
+.App > .container-fluid {
+  padding-top: 10px;
+}
+
 .form-inline .form-group {
   padding-right: 10px;
 }
@@ -23,4 +27,25 @@
   margin: 0;
   left: 0;
   padding: 0;
+}
+
+form {
+  font-family: Mukti, sans-serif !important;
+}
+
+.sidenav-custom a[href*=logout]:hover {
+  text-decoration: none;
+}
+
+.sidenav-custom a[href*=logout] {
+  color: #333;
+}
+.sidenav-custom a[href*=logout]:focus,
+.sidenav-custom a[href*=logout]:active,
+.sidenav-custom a[href*=logout]:hover {
+  color: #f12;
+}
+
+.sidenav-custom > div > div:nth-child(4):hover div a {
+  color: #f12;
 }

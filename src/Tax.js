@@ -4,45 +4,55 @@ import './Tax.css'
 
 const { fetch } = window
 const calcTax = (rate, amt) => {
-  const tx = Number(rate) / 6400 * (3 * Number(amt) + 3000)
-  return tx > 500 ? 500 : Math.ceil(tx)
+  ;[rate, amt] = [Number(rate), Number(amt)]
+  const tx = Math.ceil(rate / 6400 * (3 * amt + 3000))
+  return Math.min(tx, 500)
 }
 
 class Tax extends Component {
   state = {
     tax: 7,
-    show: []
+    show: null
   }
 
   render () {
     return (
       <div className='taxPage'>
-        <div className='container-fluid'>
-          <label>
-            Tax Percentage:
+        <form className='form-inline' onSubmit={e => e.preventDefault()}>
+          <div className='form-group input-icon'>
+            <label htmlFor='tax'>Tax Percentage:&nbsp;</label>
+            <i>%</i>
             <input
               type='number'
+              name='tax'
+              min={0}
+              max={15}
+              value={this.state.tax}
               className='form-control'
-              onChange={e => this.setState({ tax: Number(e.target.value) })}
+              title='Tax Percentage: A value between 0 and 15'
+              onChange={e =>
+                this.setState({ tax: Math.min(Number(e.target.value), 15) })}
             />
-          </label>
+          </div>
           <button className='btn btn-primary' onClick={this.reTax}>
             Re-calculate
           </button>
-        </div>
-        {this.state.show.length > 0
-          ? <div className='container-fluid'>
-            <div className='responsible-table'>
-              <table className='table table-striped'>
-                <th>
-                  <td>Ward</td>
-                  <td>Tax</td>
-                </th>
-                {this.state.show.map(el => (
-                  <tr key={el.ward}><td>{el.ward}</td><td>{el.tax}</td></tr>
+        </form>
+        {this.state.show !== null
+          ? <div className='responsible-table'>
+            <table className='table table-striped'>
+              <thead>
+                <tr>
+                  <th>Ward</th>
+                  <th>Tax</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(this.state.show).map(el => (
+                  <tr key={el[0]}><td>{el[0]}</td><td>{el[1]}</td></tr>
                   ))}
-              </table>
-            </div>
+              </tbody>
+            </table>
           </div>
           : 'Loading...'}
       </div>
@@ -58,38 +68,35 @@ class Tax extends Component {
   }
 
   getTax = async e => {
-    console.log('fetching data again')
-    const taxes = {
-      'Ward 1': 0,
-      'Ward 2': 0,
-      'Ward 3': 0,
-      'Ward 4': 0,
-      'Ward 5': 0,
-      'Ward 6': 0,
-      'Ward 7': 0,
-      'Ward 8': 0,
-      'Ward 9': 0
-    }
     let res = await fetch('/view', {
       credentials: 'same-origin'
     })
 
     res = await res.json()
 
-    res.forEach(el => {
-      if (el.hasOwnProperty('home-cost')) {
-        taxes['Ward ' + el.ward] += calcTax(
-          this.state.tax,
-          Number(el['home-cost'])
+    return this.setState(state => ({
+      show: Object.assign(
+        {
+          'Ward 1': 0,
+          'Ward 2': 0,
+          'Ward 3': 0,
+          'Ward 4': 0,
+          'Ward 5': 0,
+          'Ward 6': 0,
+          'Ward 7': 0,
+          'Ward 8': 0,
+          'Ward 9': 0
+        },
+        res.reduce(
+          (acc, el) =>
+            Object.assign({}, acc, {
+              [`Ward ${el.ward}`]: calcTax(state.tax, el['home-cost']) +
+                (acc[`Ward ${el.ward}`] || 0)
+            }),
+          {}
         )
-      }
-    })
-
-    return this.setState({
-      show: Object.keys(taxes).map(w => {
-        return { tax: taxes[w], ward: w }
-      })
-    })
+      )
+    }))
   }
 }
 
