@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'Mukti';
-  src: url('//fonts.maateen.me/mukti/Mukti.eot');
-  src: url('//fonts.maateen.me/mukti/Mukti.woff') format('woff'),
-       url('//fonts.maateen.me/mukti/Mukti.ttf') format('truetype'),
-       url('//fonts.maateen.me/mukti/Mukti.svg#Mukti') format('svg'),
-       url('//fonts.maateen.me/mukti/Mukti.eot?#iefix') format('embedded-opentype');
+  src: url('https://cors-anywhere.herokuapp.com/https://fonts.maateen.me/mukti/Mukti.eot');
+  src: url('https://cors-anywhere.herokuapp.com/https://fonts.maateen.me/mukti/Mukti.woff') format('woff'),
+       url('https://cors-anywhere.herokuapp.com/https://fonts.maateen.me/mukti/Mukti.ttf') format('truetype'),
+       url('https://cors-anywhere.herokuapp.com/https://fonts.maateen.me/mukti/Mukti.svg#Mukti') format('svg'),
+       url('https://cors-anywhere.herokuapp.com/https://fonts.maateen.me/mukti/Mukti.eot?#iefix') format('embedded-opentype');
   font-weight: normal;
   font-style: normal;
 }

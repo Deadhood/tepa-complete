@@ -4,10 +4,10 @@
   "description": "Tepa backend",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "prestart": "npm run front:prod",
-    "front:dev": "webpack-dev-server",
-    "front:prod": "cross-env NODE_ENV=production webpack --progress --colors",
+    "start": "cross-env NODE_ENV=development node index.js",
+    "build": "cross-env NODE_ENV=production webpack --progress --colors",
+    "preprod": "npm run build",
+    "prod": "cross-env NODE_ENV=production node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -58,9 +58,9 @@
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
-    "core-js": "^2.4.1",
     "cross-env": "^5.0.1",
     "css-loader": "^0.28.4",
+    "endpoint-utils": "^1.0.2",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.29.0",
@@ -72,7 +72,8 @@
     "standard": "^10.0.2",
     "style-loader": "^0.18.2",
     "webpack": "^3.3.0",
-    "webpack-dev-server": "^2.5.1"
+    "webpack-dev-middleware": "^1.12.0",
+    "webpack-hot-middleware": "^2.18.2"
   },
   "standard": {
     "parser": "babel-eslint",

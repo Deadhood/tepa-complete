@@ -1,21 +1,26 @@
 const path = require('path')
+const r = require('rethinkdb')
+const morgan = require('morgan')
 const Express = require('express')
 const Passport = require('passport')
+const rInit = require('rethinkdb-init')
 const bodyParser = require('body-parser')
 const { ensureLoggedIn } = require('connect-ensure-login')
 const { Strategy: LocalStrategy } = require('passport-local')
-const r = require('rethinkdb')
-require('rethinkdb-init')(r)
 
+// inintialize app and require configs
+rInit(r)
 const app = new Express()
 const config = require('./config')
 
-if (process.env.NODE_ENV !== 'production') { app.use(require('morgan')('combined')) }
+if (process.env.NODE_ENV !== 'production') {
+  app.use(morgan('tiny'))
+}
 
 app.use(require('cookie-parser')())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(Express.static(path.join(__dirname, 'public')))
+app.use('/assets', Express.static(path.join(__dirname, 'public')))
 app.use(
   require('express-session')({
     secret: config.secret,
@@ -23,6 +28,25 @@ app.use(
     saveUninitialized: false
   })
 )
+
+if (process.env.NODE_ENV !== 'production') {
+  const webpack = require('webpack')
+  const webpackConfig = require('./webpack.config')
+  const hotMiddleware = require('webpack-hot-middleware')
+  const devMiddleware = require('webpack-dev-middleware')
+  const compiler = webpack(webpackConfig)
+
+  app.use(
+    devMiddleware(compiler, {
+      noInfo: true,
+      publicPath: webpackConfig.output.publicPath
+    })
+  )
+
+  app.use(hotMiddleware(compiler, {
+    path: '/__hmr'
+  }))
+}
 
 const localRethinkStrategy = require('./utils/local-strategy')(r, config)
 
@@ -35,11 +59,9 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 // Setup our db so we can get started
-r
-  .init(config.database, [config.table, config.dataTable])
-  .then(conn => {
-    r.conn = conn
-  })
+r.init(config.database, [config.table, config.dataTable]).then(conn => {
+  r.conn = conn
+})
 
 // Setup PassportJS local authentication strategy
 Passport.use(new LocalStrategy(localRethinkStrategy))
@@ -61,9 +83,7 @@ Passport.deserializeUser(function (id, done) {
       return user.toArray()
     })
     .then(res => done(null, res[0]))
-    .error(e => {
-      throw e
-    })
+    .error(console.error)
 })
 
 // Setup the views
@@ -109,12 +129,14 @@ app.post('/add', ensureLoggedIn('/'), (req, res) => {
 
 app.get('/view', ensureLoggedIn('/'), (req, res) => {
   const query = {}
+
   if (req.query) {
     for (let it in req.query) {
       const val = req.query[it]
       query[it] = isNaN(Number(val)) ? val : Number(val)
     }
   }
+
   r
     .db(config.database.db)
     .table(config.dataTable.name)
@@ -125,11 +147,32 @@ app.get('/view', ensureLoggedIn('/'), (req, res) => {
       res.json(data)
     })
     .error(e => {
-      console.log(e)
+      console.error(e)
       res.status(404).json({})
     })
 })
 
-app.listen(config.port, function () {
-  console.log(`Server listening on port ${config.port}!`)
-})
+// do stuff when the file is run from cli
+if (require.main === module) {
+  const { isFreePort } = require('endpoint-utils')
+  if (typeof config.port === 'undefined') {
+    console.error(`Environment variables not set. Make sure .env file exists.`)
+    process.exit(1)
+  }
+  isFreePort(config.database.port).then(free => {
+    if (!free) {
+      require('child_process').execFileSync('node', [
+        path.resolve(__dirname, 'utils', 'seed-database.js')
+      ])
+    }
+
+    if (free) {
+      console.error(`RethinkDB is not running.`)
+      process.exit(1)
+    }
+  })
+
+  app.listen(config.port, function () {
+    console.log(`Server listening on http://localhost:${config.port}/`)
+  })
+}

@@ -11,14 +11,13 @@ const isProd = process.env.NODE_ENV === 'production'
 const webpackConfig = {
   entry: [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:9000',
-    'webpack/hot/only-dev-server',
+    'webpack-hot-middleware/client?path=/__hmr',
     'babel-polyfill',
     path.join(SRC_DIR, 'index.js')
   ],
   output: {
     path: OUTPUT_DIR,
-    publicPath: '/',
+    publicPath: '/assets/static/',
     filename: 'bundle.js'
   },
   module: {
@@ -33,7 +32,7 @@ const webpackConfig = {
       {
         test: /\.jsx?$/,
         use: [{ loader: 'babel-loader' }],
-        exclude: isProd ? void 0 : /node_modules/
+        exclude: /node_modules/
       },
       {
         test: /\.(jpe?g|png|gif)$/,
@@ -78,7 +77,7 @@ const webpackConfig = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new HTMLWebpackPlugin({
-      title: 'React App',
+      title: 'Tepa Modhupur',
       template: 'views/admin.pug'
     })
   ],
@@ -93,7 +92,7 @@ const webpackConfig = {
 
 if (isProd) {
   webpackConfig.devtool = 'source-map'
-  webpackConfig.entry.splice(0, 3)
+  webpackConfig.entry.splice(0, 2)
   webpackConfig.plugins.splice(
     2,
     2,

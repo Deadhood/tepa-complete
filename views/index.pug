@@ -7,8 +7,8 @@ html(lang='en')
     meta(name='description', content='')
     meta(name='author', content='')
     title Login
-    link(href='/bootstrap.min.css', rel='stylesheet')
-    link(href='/signin.css', rel='stylesheet')
+    link(href='/assets/bootstrap.min.css', rel='stylesheet')
+    link(href='/assets/signin.css', rel='stylesheet')
   body
     if (!authed)
       .container
@@ -20,4 +20,5 @@ html(lang='en')
           input#password.form-control(type='password', placeholder='Password', required='required', name='password')
           button.btn.btn-lg.btn-primary.btn-block(type='submit') Login
     else
-      a(href='/admin') Go to Admin
+      h1
+        a(href='/admin') Go to Admin
