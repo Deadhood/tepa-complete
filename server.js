@@ -1,6 +1,7 @@
 const path = require('path')
 const r = require('rethinkdb')
 const morgan = require('morgan')
+const helmet = require('helmet')
 const Express = require('express')
 const Passport = require('passport')
 const rInit = require('rethinkdb-init')
@@ -23,10 +24,12 @@ const LocalRethink = localStrategy(r, config)
 if (IS_DEV) app.use(morgan('tiny'))
 
 // Parse cookies and form data
+app.set('trust proxy', 1)
+app.use(helmet())
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cookieSession({ keys: [config.secret], maxAge: 3.6e6 }))
+app.use(cookieSession({ keys: [config.secret], maxAge: 3.6e6, name: 'tepa1' }))
 
 // Mount static assets
 app.use('/assets', Express.static(path.join(__dirname, 'public')))
