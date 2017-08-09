@@ -90,7 +90,7 @@ app.get('/', (req, res) => {
   res.render('index', { authed: req.isAuthenticated() })
 })
 
-app.get('/admin', ensureLoggedIn('/'), (req, res) => {
+app.get(['/admin', '/admin/*'], ensureLoggedIn('/'), (req, res) => {
   res.render('admin', { authed: req.isAuthenticated() })
 })
 

@@ -45,6 +45,7 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-icons": "^2.2.5",
+    "react-json-tree": "^0.10.9",
     "react-jsonschema-form": "^0.49.0",
     "react-router-dom": "^4.1.2",
     "react-sidenav": "^2.1.1",
