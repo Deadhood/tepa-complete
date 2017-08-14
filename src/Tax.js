@@ -68,35 +68,29 @@ class Tax extends Component {
   }
 
   getTax = async e => {
-    let res = await fetch('/view', {
-      credentials: 'same-origin'
-    })
+    const res = await fetch('/record', { credentials: 'same-origin' })
+    const data = await res.json()
 
-    res = await res.json()
+    const show = data.reduce(
+      (acc, el) =>
+        Object.assign({}, acc, {
+          [`Ward ${el.ward}`]: calcTax(this.state.tax, el['home-cost']) +
+            acc[`Ward ${el.ward}`]
+        }),
+      {
+        'Ward 1': 0,
+        'Ward 2': 0,
+        'Ward 3': 0,
+        'Ward 4': 0,
+        'Ward 5': 0,
+        'Ward 6': 0,
+        'Ward 7': 0,
+        'Ward 8': 0,
+        'Ward 9': 0
+      }
+    )
 
-    return this.setState(state => ({
-      show: Object.assign(
-        {
-          'Ward 1': 0,
-          'Ward 2': 0,
-          'Ward 3': 0,
-          'Ward 4': 0,
-          'Ward 5': 0,
-          'Ward 6': 0,
-          'Ward 7': 0,
-          'Ward 8': 0,
-          'Ward 9': 0
-        },
-        res.reduce(
-          (acc, el) =>
-            Object.assign({}, acc, {
-              [`Ward ${el.ward}`]: calcTax(state.tax, el['home-cost']) +
-                (acc[`Ward ${el.ward}`] || 0)
-            }),
-          {}
-        )
-      )
-    }))
+    this.setState({ show })
   }
 }
 

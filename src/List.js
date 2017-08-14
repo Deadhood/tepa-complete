@@ -43,10 +43,10 @@ class List extends Component {
   }
 
   getWard = async () => {
-    let res = await fetch('/view', { credentials: 'same-origin' })
-    res = await res.json()
+    const res = await fetch('/record', { credentials: 'same-origin' })
+    const jsonData = await res.json()
 
-    this.setState({ jsonData: res })
+    this.setState({ jsonData })
   }
 }
 

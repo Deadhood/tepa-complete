@@ -14,11 +14,21 @@ const { ensureLoggedIn } = require('connect-ensure-login')
 
 const IS_DEV = process.env.NODE_ENV !== 'production'
 
-// inintialize app and require configs
+// initialize app and require configs
 rInit(r)
 const app = new Express()
 const config = require('./config')
 const LocalRethink = localStrategy(r, config)
+
+// Normalizer for req.query
+function normalizeObj (obj) {
+  const newObj = {}
+  for (let prop in obj) {
+    const val = obj[prop]
+    newObj[prop] = isNaN(Number(val)) ? val : Number(val)
+  }
+  return newObj
+}
 
 // Enable HTTP logs on dev environment
 if (IS_DEV) app.use(morgan('tiny'))
@@ -61,9 +71,15 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 // Setup our db so we can get started
-r.init(config.database, [config.table, config.dataTable]).then(conn => {
-  r.conn = conn
-})
+r
+  .init(config.database, [config.table, config.dataTable])
+  .then(conn => {
+    r.conn = conn
+  })
+  .catch(e => {
+    console.error(e)
+    process.exit(1)
+  })
 
 // Setup PassportJS local authentication strategy
 Passport.use(new Strategy(LocalRethink))
@@ -88,33 +104,49 @@ Passport.deserializeUser(function (id, done) {
     .error(console.error)
 })
 
-// Setup the views
+// LOGIN Page
 app.get('/', (req, res) => {
   res.render('index', { authed: req.isAuthenticated() })
 })
 
-app.get(['/admin', '/admin/*'], ensureLoggedIn('/'), (req, res) => {
-  res.render('admin', { authed: req.isAuthenticated() })
-})
-
-app.get('/logout', (req, res) => {
-  req.logout()
-  res.redirect('/')
-})
-
-app.get('/login', (req, res) => {
-  res.redirect('/')
-})
-
+// LOGIN -- handle login POST data
 app.post(
-  '/login',
+  '/',
   Passport.authenticate('local', { failureRedirect: '/' }),
   (req, res) => {
     res.redirect('/admin')
   }
 )
 
-app.post('/add', ensureLoggedIn('/'), (req, res) => {
+// LOGIN -> /
+app.get('/login', (req, res) => {
+  res.redirect('/')
+})
+
+// ADMIN panel -- React app
+app.get(['/admin', '/admin/*'], ensureLoggedIn('/'), (req, res) => {
+  res.render('admin', { authed: req.isAuthenticated() })
+})
+
+// LOGOUT
+app.get(['/logout', '/admin/logout'], (req, res) => {
+  req.logout()
+  res.redirect('/')
+})
+
+app.get('/record', ensureLoggedIn('/'), (req, res) => {
+  const query = req.query ? normalizeObj(req.query) : {}
+
+  r
+    .db(config.database.db)
+    .table(config.dataTable.name)
+    .filter(query)
+    .run(r.conn)
+    .then(r => r.toArray())
+    .then(res.json)
+})
+
+app.post('/record', ensureLoggedIn('/'), (req, res) => {
   r
     .db(config.database.db)
     .table(config.dataTable.name)
@@ -129,56 +161,19 @@ app.post('/add', ensureLoggedIn('/'), (req, res) => {
     })
 })
 
-app.get('/view', ensureLoggedIn('/'), (req, res) => {
-  const query = {}
-
-  if (req.query) {
-    for (let it in req.query) {
-      const val = req.query[it]
-      query[it] = isNaN(Number(val)) ? val : Number(val)
-    }
-  }
-
-  r
-    .db(config.database.db)
-    .table(config.dataTable.name)
-    .filter(query)
-    .run(r.conn)
-    .then(r => r.toArray())
-    .then(data => {
-      res.json(data)
-    })
-    .error(e => {
-      console.error(e)
-      res.status(404).json({})
-    })
-})
-
 // do stuff when the file is run from cli
 if (require.main === module) {
-  const { isFreePort } = require('endpoint-utils')
-  if (typeof config.port === 'undefined') {
-    console.error(`Environment variables not set. Make sure .env file exists.`)
-    process.exit(1)
-  }
-  isFreePort(config.database.port).then(free => {
-    if (!free) {
-      return require('child_process').execFileSync('node', [
-        path.resolve(__dirname, 'utils', 'seed-database.js')
-      ])
-    }
-
-    console.error(`RethinkDB is not running.`)
-    process.exit(1)
-  })
-
   if (IS_DEV) {
     const rimraf = require('rimraf')
+    const res = require('./utils/seed-database')
+
+    if (res.inserted === 1) console.log('Inserted a dummy user into DB')
+
     rimraf(path.resolve(__dirname, 'public', 'static'), function (err) {
       if (err) throw err
-
       console.log(
-        `Deleted static assets. Server should serve those from memory.`
+        `Deleted static assets.`,
+        `Server should serve those from memory.`
       )
     })
   }
