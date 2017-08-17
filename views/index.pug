@@ -12,7 +12,7 @@ html(lang='en')
   body
     if (!authed)
       .container
-        form.form-signin(method='post', action='/login')
+        form.form-signin(method='post', action='/')
           h2.form-signin-heading Please Log In
           label.sr-only(for='username') Username
           input#username.form-control(type='text', placeholder='Username', required='required', autofocus='', name='username')

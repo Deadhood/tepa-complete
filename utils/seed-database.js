@@ -6,12 +6,12 @@ const cfg = require('../config')
 
 async function seedDatabase () {
   const conn = await r.init(cfg.database, [cfg.table])
-  const connection = conn.use(cfg.database.db)
+  conn.use(cfg.database.db)
   const password = bcrypt.hashSync('password')
   return r
     .table(cfg.table.name)
     .insert({ username: 'admin', password })
-    .run(connection)
+    .run(conn)
 }
 
 if (require.main === module) {

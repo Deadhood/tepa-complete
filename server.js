@@ -18,7 +18,6 @@ const IS_DEV = process.env.NODE_ENV !== 'production'
 rInit(r)
 const app = new Express()
 const config = require('./config')
-const LocalRethink = localStrategy(r, config)
 
 // Normalizer for req.query
 function normalizeObj (obj) {
@@ -80,6 +79,8 @@ r
     console.error(e)
     process.exit(1)
   })
+
+const LocalRethink = localStrategy(r, config)
 
 // Setup PassportJS local authentication strategy
 Passport.use(new Strategy(LocalRethink))
@@ -143,7 +144,7 @@ app.get('/record', ensureLoggedIn('/'), (req, res) => {
     .filter(query)
     .run(r.conn)
     .then(r => r.toArray())
-    .then(res.json)
+    .then(data => res.json(data))
 })
 
 app.post('/record', ensureLoggedIn('/'), (req, res) => {
@@ -156,9 +157,7 @@ app.post('/record', ensureLoggedIn('/'), (req, res) => {
       if (result.inserted === 1) return res.status(200).send('Success')
       return res.status(400).send('Failed')
     })
-    .error(e => {
-      console.log(e)
-    })
+    .error(console.log)
 })
 
 // do stuff when the file is run from cli
