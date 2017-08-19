@@ -1,7 +1,15 @@
 export default {
   title: 'টেপা',
   type: 'object',
-  required: ['graam', 'ward', 'holding-number', 'home-cost', 'poribar-prodhan', 'pita-shami', 'mom'],
+  required: [
+    'graam',
+    'ward',
+    'holding-number',
+    'home-cost',
+    'poribar-prodhan',
+    'pita-shami',
+    'mom'
+  ],
   properties: {
     graam: {
       title: 'গ্রাম',
@@ -97,9 +105,9 @@ export default {
       title: 'কাজের বিবরণ',
       type: 'string'
     },
-    'NID-BC': {
+    'nid-bc': {
       title: 'জাতীয় পরিচয়পত্র/জন্ম নিবন্ধন',
-      type: 'string'
+      type: 'integer'
     },
     married: {
       title: 'বৈবাহিক অবস্থা',
@@ -551,7 +559,7 @@ export default {
             }
           }
         },
-        'others': {
+        others: {
           title: 'অন্যান্য',
           type: 'object',
           properties: {
@@ -662,7 +670,7 @@ export default {
             }
           }
         },
-        'others': {
+        others: {
           title: 'অন্যান্য',
           type: 'object',
           properties: {
@@ -682,7 +690,7 @@ export default {
           title: 'ভিজিডি',
           type: 'object',
           properties: {
-            'service': {
+            service: {
               title: 'সেবার নাম',
               type: 'string'
             }
@@ -692,7 +700,7 @@ export default {
           title: 'ভিডিএফ',
           type: 'object',
           properties: {
-            'service': {
+            service: {
               title: 'সেবার নাম',
               type: 'string'
             }
@@ -702,7 +710,7 @@ export default {
           title: '৪০ দিন কর্মসূচী',
           type: 'object',
           properties: {
-            'service': {
+            service: {
               title: 'সেবার নাম',
               type: 'string'
             }
@@ -712,7 +720,7 @@ export default {
           title: 'মাতৃত্ব ভাতা',
           type: 'object',
           properties: {
-            'service': {
+            service: {
               title: 'সেবার নাম',
               type: 'string'
             }
@@ -722,7 +730,7 @@ export default {
           title: 'প্রতিবন্ধী ভাতা',
           type: 'object',
           properties: {
-            'service': {
+            service: {
               title: 'সেবার নাম',
               type: 'string'
             }
@@ -732,7 +740,7 @@ export default {
           title: 'বয়স্ক',
           type: 'object',
           properties: {
-            'service': {
+            service: {
               title: 'সেবার নাম',
               type: 'string'
             }
@@ -742,7 +750,7 @@ export default {
           title: 'বিধবা',
           type: 'object',
           properties: {
-            'service': {
+            service: {
               title: 'সেবার নাম',
               type: 'string'
             }
@@ -752,7 +760,7 @@ export default {
           title: 'মুক্তিযোদ্ধা',
           type: 'object',
           properties: {
-            'service': {
+            service: {
               title: 'সেবার নাম',
               type: 'string'
             }
@@ -762,7 +770,7 @@ export default {
           title: 'অন্যান্য',
           type: 'object',
           properties: {
-            'service': {
+            service: {
               title: 'সেবার নাম',
               type: 'string'
             }
