@@ -40,10 +40,14 @@ class BalagForm extends Component {
     if (res.status === 200) {
       formData = {}
       this.props.dataStore.message = 'Success'
+      setTimeout(() => {
+        this.props.dataStore.message = ''
+      }, 5000)
       this.setState({ fd: {} })
     } else {
       this.props.dataStore.message = 'Failed'
     }
+    window.scrollTo(0, 0)
   }
 }
 

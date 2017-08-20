@@ -57,13 +57,14 @@ class List extends Component {
         {this.state.data.length !== 0 &&
           Object.entries(this.state.data[0]).map(
             (n, indx) =>
-              (typeof n[1] === 'object'
+              (Object.prototype.toString.call(n[1]) === '[object Object]'
                 ? <div key={indx} className='panel panel-default'>
                   <div className='panel-heading'>{n[0]}</div>
                   <div className='panel-body'>
                     {Object.entries(n[1]).map(
                         (el, idx) =>
-                          (typeof n[1] === 'object'
+                          (Object.prototype.toString.call(el[1]) ===
+                            '[object Object]'
                             ? Object.entries(el[1]).map((elm, ix) => (
                               <div key={ix}><b>{elm[0]}</b>: {elm[1]}</div>
                               ))
