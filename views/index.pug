@@ -9,6 +9,8 @@ html(lang='en')
     title Login
     link(href='/assets/bootstrap.min.css', rel='stylesheet')
     link(href='/assets/signin.css', rel='stylesheet')
+    script.
+      window.bgImages = !{images}
   body
     if (!authed)
       .container
@@ -22,3 +24,4 @@ html(lang='en')
     else
       h1
         a(href='/admin') Go to Admin
+    script(src='/assets/index.js')

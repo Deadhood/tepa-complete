@@ -1,4 +1,5 @@
 const path = require('path')
+const glob = require('glob')
 const r = require('rethinkdb')
 const morgan = require('morgan')
 const helmet = require('helmet')
@@ -18,6 +19,10 @@ const IS_DEV = process.env.NODE_ENV !== 'production'
 rInit(r)
 const app = new Express()
 const config = require('./config')
+
+const bgImages = glob
+  .sync(path.join(__dirname, 'public', 'pics', '*'))
+  .map(im => im.replace(path.join(__dirname, 'public'), '/assets'))
 
 // Normalizer for req.query
 function normalizeObj (obj) {
@@ -107,7 +112,10 @@ Passport.deserializeUser(function (id, done) {
 
 // LOGIN Page
 app.get('/', (req, res) => {
-  res.render('index', { authed: req.isAuthenticated() })
+  res.render('index', {
+    authed: req.isAuthenticated(),
+    images: JSON.stringify(bgImages)
+  })
 })
 
 // LOGIN -- handle login POST data
