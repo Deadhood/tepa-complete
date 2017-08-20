@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import './List.css'
 const { fetch } = window
 
+const isObject = el => Object.prototype.toString.call(el) === '[object Object]'
+
 class List extends Component {
   state = {
     selected: '',
@@ -54,32 +56,48 @@ class List extends Component {
             Search
           </button>
         </div>
-        {this.state.data.length !== 0 &&
-          Object.entries(this.state.data[0]).map(
-            (n, indx) =>
-              (Object.prototype.toString.call(n[1]) === '[object Object]'
-                ? <div key={indx} className='panel panel-default'>
-                  <div className='panel-heading'>{n[0]}</div>
-                  <div className='panel-body'>
-                    {Object.entries(n[1]).map(
-                        (el, idx) =>
-                          (Object.prototype.toString.call(el[1]) ===
-                            '[object Object]'
-                            ? Object.entries(el[1]).map((elm, ix) => (
-                              <div key={ix}><b>{elm[0]}</b>: {elm[1]}</div>
-                              ))
-                            : <div key={idx}><b>{el[0]}</b>: {el[1]}</div>)
-                      )}
-                  </div>
-                </div>
-                : <div key={indx}><b>{n[0]}</b>: {n[1]}</div>)
-          )}
+        {this.state.data.length !== 0 && this.getEntries(this.state.data)}
       </div>
     )
   }
 
   selectType = e => {
     if (e.target.checked) this.setState({ selected: e.target.value })
+  }
+
+  getEntries = data => {
+    data = Object.entries(data[0])
+    const rand = Math.ceil(Math.random() * 100)
+
+    const rootElems = (
+      <div className='panel panel-primary' key={rand}>
+        <div className='panel-heading'>Personal Info</div>
+        <div className='panel-body'>
+          {data
+            .filter(el => !isObject(el[1]))
+            .map((el, ix) => (
+              <div key={rand + ix * 2}><b>{el[0]}</b>: {el[1]}</div>
+            ))}
+        </div>
+      </div>
+    )
+
+    const deepElems = data.filter(el => isObject(el[1])).map((it, idx) => (
+      <div key={idx + rand * 2} className='panel panel-default'>
+        <div className='panel-heading'>{it[0]}</div>
+        <div className='panel-body'>
+          {Object.entries(it[1]).map(
+            (el, idx) =>
+              (isObject(el[1])
+                ? Object.entries(el[1]).map((elm, ix) => (
+                  <div key={ix}><b>{elm[0]}</b>: {elm[1]}</div>
+                  ))
+                : <div key={idx}><b>{el[0]}</b>: {el[1]}</div>)
+          )}
+        </div>
+      </div>
+    ))
+    return [].concat(rootElems, deepElems)
   }
 
   fetchData = async e => {
