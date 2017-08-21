@@ -10,7 +10,7 @@ html(lang='en')
     link(href='/assets/bootstrap.min.css', rel='stylesheet')
     link(href='/assets/signin.css', rel='stylesheet')
     script.
-      window.bgImages = !{images}
+      window.bgImages = !{images};
   body
     if (!authed)
       .container
@@ -22,6 +22,8 @@ html(lang='en')
           input#password.form-control(type='password', placeholder='Password', required='required', name='password')
           button.btn.btn-lg.btn-primary.btn-block(type='submit') Login
     else
-      h1
-        a(href='/admin') Go to Admin
-    script(src='/assets/index.js')
+      .container.text-center
+        a(href='/admin').btn.btn-lg.btn-danger Dashboard
+        hr
+        a(href='/logout').btn.btn-md.btn-warning Logout
+    script(src='/assets/login.min.js')

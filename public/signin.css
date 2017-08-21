@@ -1,12 +1,13 @@
 body {
   padding-top: 40px;
   padding-bottom: 40px;
+  background-color: #053;
   background-image: url('/assets/pics/35226784314_59f0f26891_b.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   height: 100vh;
-  transition: background 2s ease-in-out;
+  transition: background 1500ms ease;
 }
 
 .form-signin {

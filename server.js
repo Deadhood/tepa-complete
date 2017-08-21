@@ -22,7 +22,7 @@ const config = require('./config')
 
 const bgImages = glob
   .sync(path.join(__dirname, 'public', 'pics', '*'))
-  .map(im => im.replace(path.join(__dirname, 'public'), '/assets'))
+  .map(im => im.replace(/^.*public/, '/assets'))
 
 // Normalizer for req.query
 function normalizeObj (obj) {

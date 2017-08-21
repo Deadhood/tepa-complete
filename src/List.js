@@ -6,7 +6,7 @@ const isObject = el => Object.prototype.toString.call(el) === '[object Object]'
 
 class List extends Component {
   state = {
-    selected: '',
+    selected: 'nid-bc',
     value: '',
     data: []
   }
@@ -15,42 +15,20 @@ class List extends Component {
     return (
       <div className='List'>
         <div className='form-group'>
-          <label className='radio-inline'>
-            <input
-              onChange={this.selectType}
-              type='radio'
-              value='nid-bc'
-              name='type'
-              className='radio'
-            />
-            NID/BC
-          </label>
-
-          <label className='radio-inline'>
-            <input
-              onChange={this.selectType}
-              type='radio'
-              value='poribar-prodhan'
-              name='type'
-              className='radio'
-            />
-            Name
-          </label>
-
-          <label className='radio-inline'>
-            <input
-              onChange={this.selectType}
-              type='radio'
-              value='mobile'
-              name='type'
-              className='radio'
-            />
-            Phone Number
-          </label>
+          <label htmlFor='search'>Search by:&nbsp;</label>
+          <select
+            name='search'
+            value={this.state.selected}
+            onChange={e => this.setState({ selected: e.target.value })}
+          >
+            <option value='nid-bc'>জাতীয় পরিচয় পত্র / জন্ম নিবন্ধন</option>
+            <option value='mobile'>ফোন নাম্বার</option>
+            <option value='poribar-prodhan'>পরিবার প্রধান-এর নাম</option>
+          </select>
           <input
-            onChange={e => this.setState({ value: e.target.value })}
             type='text'
-            className='form-control'
+            value={this.state.value}
+            onChange={e => this.setState({ value: e.target.value })}
           />
           <button onClick={this.fetchData} className='btn btn-primary'>
             Search
@@ -59,10 +37,6 @@ class List extends Component {
         {this.state.data.length !== 0 && this.getEntries(this.state.data)}
       </div>
     )
-  }
-
-  selectType = e => {
-    if (e.target.checked) this.setState({ selected: e.target.value })
   }
 
   getEntries = data => {
