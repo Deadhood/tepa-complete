@@ -3,7 +3,9 @@ import React, { Component } from 'react'
 import './List.css'
 const { fetch } = window
 
-const isObject = el => Object.prototype.toString.call(el) === '[object Object]'
+const mPairs = (obj, cb) => {
+  return _.map(_.toPairs(obj), cb)
+}
 
 class List extends Component {
   state = {
@@ -40,59 +42,51 @@ class List extends Component {
     )
   }
 
-  getEntries = data =>
-    data.map((record, index) => {
+  getEntries = records =>
+    _.map(records, (record, index) => {
       const rnd = () => _.random(1, 5000)
-      const [rootEls, deepEls] = _.partition(
-        Object.entries(record),
-        it => !isObject(it[1])
+      const [flat, nest] = _.partition(
+        _.toPairs(record),
+        it => !_.isPlainObject(it[1])
       )
 
-      const rootElems = (
+      const keyVal = _.map(flat, ([key, val]) => (
+        <div key={index + key}><b>{key}</b>: {val}</div>
+      ))
+
+      const base = (
         <div className='panel panel-primary' key={index + rnd()}>
           <div className='panel-heading'>Personal Info</div>
-          <div className='panel-body'>
-            {rootEls.map((rec, idx) => (
-              <div key={idx}><b>{rec[0]}</b>: {rec[1]}</div>
-            ))}
-          </div>
+          <div className='panel-body'>{keyVal}</div>
         </div>
       )
 
-      const deepElems = deepEls.map((rec, idx) => {
+      const nested = _.map(nest, ([key, val], idx) => {
         const [root, deep] = _.partition(
-          Object.entries(rec[1]),
-          it => !isObject(it[1])
+          _.toPairs(val),
+          it => !_.isPlainObject(it[1])
         )
 
         const childs = [].concat(
-          root.map(it => (
-            <div key={it[0] + rnd()}>
-              <b>{it[0]}</b>: {it[1]}
-            </div>
-          )),
-          deep.map(it => (
-            <div key={it[0] + rnd()} className='panel panel-warning'>
-              <div className='panel-heading'>{it[0]}</div>
+          root.map(([k, v]) => <div key={idx + k}><b>{k}</b>: {v}</div>),
+          deep.map(([k, v]) => (
+            <div key={idx + k} className='panel panel-warning'>
+              <div className='panel-heading'>{k}</div>
               <div className='panel-body'>
-                {Object.entries(it[1]).map(itm => (
-                  <div key={itm[0]}><b>{itm[0]}</b>: {itm[1]}</div>
-                ))}
+                {mPairs(v, ([x, y]) => <div key={x}><b>{x}</b>: {y}</div>)}
               </div>
             </div>
           ))
         )
 
         return (
-          <div className='panel panel-success' key={idx + rnd()}>
-            <div className='panel-heading'>{rec[0]}</div>
-            <div className='panel-body'>
-              {childs}
-            </div>
+          <div className='panel panel-success' key={idx + key}>
+            <div className='panel-heading'>{key}</div>
+            <div className='panel-body'>{childs}</div>
           </div>
         )
       })
-      return [].concat(rootElems, deepElems)
+      return [].concat(base, nested)
     })
 
   fetchData = async e => {
