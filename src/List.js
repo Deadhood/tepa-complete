@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
 import './List.css'
 const { fetch } = window
@@ -39,44 +40,65 @@ class List extends Component {
     )
   }
 
-  getEntries = data => {
-    data = Object.entries(data[0])
-    const rand = Math.ceil(Math.random() * 100)
+  getEntries = data =>
+    data.map((record, index) => {
+      const rnd = () => _.random(1, 5000)
+      const [rootEls, deepEls] = _.partition(
+        Object.entries(record),
+        it => !isObject(it[1])
+      )
 
-    const rootElems = (
-      <div className='panel panel-primary' key={rand}>
-        <div className='panel-heading'>Personal Info</div>
-        <div className='panel-body'>
-          {data
-            .filter(el => !isObject(el[1]))
-            .map((el, ix) => (
-              <div key={rand + ix * 2}><b>{el[0]}</b>: {el[1]}</div>
+      const rootElems = (
+        <div className='panel panel-primary' key={index + rnd()}>
+          <div className='panel-heading'>Personal Info</div>
+          <div className='panel-body'>
+            {rootEls.map((rec, idx) => (
+              <div key={idx}><b>{rec[0]}</b>: {rec[1]}</div>
             ))}
+          </div>
         </div>
-      </div>
-    )
+      )
 
-    const deepElems = data.filter(el => isObject(el[1])).map((it, idx) => (
-      <div key={idx + rand * 2} className='panel panel-default'>
-        <div className='panel-heading'>{it[0]}</div>
-        <div className='panel-body'>
-          {Object.entries(it[1]).map(
-            (el, idx) =>
-              (isObject(el[1])
-                ? Object.entries(el[1]).map((elm, ix) => (
-                  <div key={ix}><b>{elm[0]}</b>: {elm[1]}</div>
-                  ))
-                : <div key={idx}><b>{el[0]}</b>: {el[1]}</div>)
-          )}
-        </div>
-      </div>
-    ))
-    return [].concat(rootElems, deepElems)
-  }
+      const deepElems = deepEls.map((rec, idx) => {
+        const [root, deep] = _.partition(
+          Object.entries(rec[1]),
+          it => !isObject(it[1])
+        )
+
+        const childs = [].concat(
+          root.map(it => (
+            <div key={it[0] + rnd()}>
+              <b>{it[0]}</b>: {it[1]}
+            </div>
+          )),
+          deep.map(it => (
+            <div key={it[0] + rnd()} className='panel panel-warning'>
+              <div className='panel-heading'>{it[0]}</div>
+              <div className='panel-body'>
+                {Object.entries(it[1]).map(itm => (
+                  <div key={itm[0]}><b>{itm[0]}</b>: {itm[1]}</div>
+                ))}
+              </div>
+            </div>
+          ))
+        )
+
+        return (
+          <div className='panel panel-success' key={idx + rnd()}>
+            <div className='panel-heading'>{rec[0]}</div>
+            <div className='panel-body'>
+              {childs}
+            </div>
+          </div>
+        )
+      })
+      return [].concat(rootElems, deepElems)
+    })
 
   fetchData = async e => {
     const { selected, value } = this.state
-    const res = await fetch(`/record?${selected}=${value}`, {
+    const query = selected.length > 0 && value ? `${selected}=${value}` : ''
+    const res = await fetch(`/record?${query}`, {
       credentials: 'same-origin'
     })
     const data = await res.json()

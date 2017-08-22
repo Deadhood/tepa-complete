@@ -3300,7 +3300,7 @@ lodash@^3.7.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.3, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.6.1, lodash@~4.17.4:
+lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.6.1, lodash@~4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -4545,7 +4545,7 @@ react-sidenav@^2.1.1:
   resolved "https://registry.yarnpkg.com/react-sidenav/-/react-sidenav-2.1.1.tgz#69260f3aaee19ecbd901001f8813693c645c492f"
   dependencies:
     prop-types "^15.5.8"
-    styled-components "*"
+    styled-components "^1.4.4"
 
 react@^15.6.1:
   version "15.6.1"
