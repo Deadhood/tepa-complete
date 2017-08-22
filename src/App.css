@@ -3,10 +3,6 @@
   margin: 0 auto;
 }
 
-.App > .container-fluid {
-  padding-top: 10px;
-}
-
 .form-inline .form-group {
   padding-right: 10px;
 }
@@ -48,4 +44,16 @@ form {
 
 .sidenav-custom > div > div:nth-child(4):hover div a {
   color: #f12;
+}
+
+.sidenav-custom #mujib {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+#banner {
+  width: 80%;
+  height: 200px;
+  margin: 5px auto;
 }

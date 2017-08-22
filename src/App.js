@@ -56,9 +56,17 @@ class App extends Component {
                 <NavText><a href='/logout'>Logout</a></NavText>
               </Nav>
             </SideNav>
+            <img
+              src='/assets/mujib.png'
+              alt='Sheikh Mujibur Rahman'
+              id='mujib'
+            />
           </div>
         </div>
         <div className='col-sm-10 container-fluid'>
+          <div className='text-center'>
+            <img src='/assets/banner.jpg' alt='আমার বাংলাদেশ' id='banner' />
+          </div>
           {this.dataStore.message.length > 0 &&
             <div className='well'>{this.dataStore.message}</div>}
           <Route exact path='/' render={() => <Redirect to='/add' />} />
