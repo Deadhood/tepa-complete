@@ -1,11 +1,9 @@
-import _ from 'lodash'
+import R from 'ramda'
 import React, { Component } from 'react'
 import './List.css'
 const { fetch } = window
 
-const mPairs = (obj, cb) => {
-  return _.map(_.toPairs(obj), cb)
-}
+const objMap = (fn, obj) => R.map(fn, R.toPairs(obj))
 
 class List extends Component {
   state = {
@@ -42,52 +40,47 @@ class List extends Component {
     )
   }
 
-  getEntries = records =>
-    _.map(records, (record, index) => {
-      const rnd = () => _.random(1, 5000)
-      const [flat, nest] = _.partition(
-        _.toPairs(record),
-        it => !_.isPlainObject(it[1])
+  getEntries = R.map((record, rId) => {
+    const rnd = () => Math.round(Math.random() * 5000)
+    const isLastItObj = R.compose(R.equals('Object'), R.type, R.last)
+    const [nest, flat] = R.partition(isLastItObj, R.toPairs(record))
+
+    const root = (
+      <div className='panel panel-primary' key={rId + rnd()}>
+        <div className='panel-heading'>Personal Info</div>
+        <div className='panel-body'>
+          {flat.map(([key, val]) => (
+            <div key={rId + key}><b>{key}</b>: {val}</div>
+          ))}
+        </div>
+      </div>
+    )
+
+    const nested = nest.map(([key, val], idx) => {
+      const [deep, here] = R.partition(isLastItObj, R.toPairs(val))
+
+      const childEls = [].concat(
+        here.map(([k, v]) => <div key={rId + idx + k}><b>{k}</b>: {v}</div>),
+        deep.map(([k, v]) => (
+          <div className='panel panel-warning' key={idx + k}>
+            <div className='panel-heading'>{k}</div>
+            <div className='panel-body'>
+              {objMap(([x, y]) => <div key={x}><b>{x}</b>: {y}</div>, v)}
+            </div>
+          </div>
+        ))
       )
 
-      const keyVal = _.map(flat, ([key, val]) => (
-        <div key={index + key}><b>{key}</b>: {val}</div>
-      ))
-
-      const base = (
-        <div className='panel panel-primary' key={index + rnd()}>
-          <div className='panel-heading'>Personal Info</div>
-          <div className='panel-body'>{keyVal}</div>
+      return (
+        <div className='panel panel-success' key={idx + key}>
+          <div className='panel-heading'>{key}</div>
+          <div className='panel-body'>{childEls}</div>
         </div>
       )
-
-      const nested = _.map(nest, ([key, val], idx) => {
-        const [root, deep] = _.partition(
-          _.toPairs(val),
-          it => !_.isPlainObject(it[1])
-        )
-
-        const childs = [].concat(
-          root.map(([k, v]) => <div key={idx + k}><b>{k}</b>: {v}</div>),
-          deep.map(([k, v]) => (
-            <div key={idx + k} className='panel panel-warning'>
-              <div className='panel-heading'>{k}</div>
-              <div className='panel-body'>
-                {mPairs(v, ([x, y]) => <div key={x}><b>{x}</b>: {y}</div>)}
-              </div>
-            </div>
-          ))
-        )
-
-        return (
-          <div className='panel panel-success' key={idx + key}>
-            <div className='panel-heading'>{key}</div>
-            <div className='panel-body'>{childs}</div>
-          </div>
-        )
-      })
-      return [].concat(base, nested)
     })
+
+    return [].concat(root, nested)
+  })
 
   fetchData = async e => {
     const { selected, value } = this.state
