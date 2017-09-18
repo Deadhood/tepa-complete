@@ -172,9 +172,10 @@ app.post('/record', ensureLoggedIn('/'), (req, res) => {
 if (require.main === module) {
   if (IS_DEV) {
     const rimraf = require('rimraf')
-    const res = require('./utils/seed-database')
-
-    if (res.inserted === 1) console.log('Inserted a dummy user into DB')
+    ;(async function () {
+      const res = await require('./utils/seed-database')()
+      if (res.inserted === 1) console.log('Inserted a dummy user into DB')
+    })()
 
     rimraf(path.resolve(__dirname, 'public', 'static'), function (err) {
       if (err) throw err

@@ -1,13 +1,14 @@
+import R from 'ramda'
 import React, { Component } from 'react'
 
 import './Tax.css'
 
 const { fetch } = window
-const calcTax = (rate, amt) => {
+const calcTax = R.curry((rate, amt) => {
   ;[rate, amt] = [Number(rate), Number(amt)]
   const tx = Math.ceil(rate / 6400 * (3 * amt + 3000))
   return Math.min(tx, 500)
-}
+})
 
 class Tax extends Component {
   state = {
@@ -38,7 +39,7 @@ class Tax extends Component {
             Re-calculate
           </button>
         </form>
-        {this.state.show !== null
+        {!R.isNil(this.state.show)
           ? <div className='responsible-table'>
             <table className='table table-striped'>
               <thead>
@@ -48,8 +49,8 @@ class Tax extends Component {
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(this.state.show).map(el => (
-                  <tr key={el[0]}><td>{el[0]}</td><td>{el[1]}</td></tr>
+                {this.state.show.map(([w, t]) => (
+                  <tr key={w}><td>{w}</td><td>{t}</td></tr>
                   ))}
               </tbody>
             </table>
@@ -67,27 +68,27 @@ class Tax extends Component {
     this.getTax()
   }
 
-  getTax = async e => {
+  getTax = async () => {
     const res = await fetch('/record', { credentials: 'same-origin' })
     const data = await res.json()
+    const tax = calcTax(this.state.tax)
 
-    const show = data.reduce(
-      (acc, el) =>
-        Object.assign({}, acc, {
-          [`Ward ${el.ward}`]: calcTax(this.state.tax, el['home-cost']) +
-            acc[`Ward ${el.ward}`]
-        }),
-      {
-        'Ward 1': 0,
-        'Ward 2': 0,
-        'Ward 3': 0,
-        'Ward 4': 0,
-        'Ward 5': 0,
-        'Ward 6': 0,
-        'Ward 7': 0,
-        'Ward 8': 0,
-        'Ward 9': 0
-      }
+    const show = R.toPairs(
+      data.reduce(
+        (acc, { ward, 'home-cost': hc }) =>
+          R.merge(acc, { [`Ward ${ward}`]: tax(hc) + acc[`Ward ${ward}`] }),
+        {
+          'Ward 1': 0,
+          'Ward 2': 0,
+          'Ward 3': 0,
+          'Ward 4': 0,
+          'Ward 5': 0,
+          'Ward 6': 0,
+          'Ward 7': 0,
+          'Ward 8': 0,
+          'Ward 9': 0
+        }
+      )
     )
 
     this.setState({ show })
