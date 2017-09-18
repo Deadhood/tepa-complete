@@ -1,13 +1,21 @@
 body {
   padding-top: 40px;
   padding-bottom: 40px;
-  background-color: #eee;
+  background-color: #053;
+  background-image: url('/assets/pics/35226784314_59f0f26891_b.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  transition: background 1500ms ease;
 }
 
 .form-signin {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.85)
 }
 .form-signin .form-signin-heading,
 .form-signin .checkbox {

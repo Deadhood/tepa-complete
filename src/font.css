@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'Mukti';
-  src: url('//fonts.maateen.me/mukti/Mukti.eot');
-  src: url('//fonts.maateen.me/mukti/Mukti.woff') format('woff'),
-       url('//fonts.maateen.me/mukti/Mukti.ttf') format('truetype'),
-       url('//fonts.maateen.me/mukti/Mukti.svg#Mukti') format('svg'),
-       url('//fonts.maateen.me/mukti/Mukti.eot?#iefix') format('embedded-opentype');
+  src: url('/assets/fonts/Mukti.eot');
+  src: url('/assets/fonts/Mukti.woff') format('woff'),
+       url('/assets/fonts/Mukti.ttf') format('truetype'),
+       url('/assets/fonts/Mukti.svg#Mukti') format('svg'),
+       url('/assets/fonts/Mukti-iefix.eot?#iefix') format('embedded-opentype');
   font-weight: normal;
   font-style: normal;
 }

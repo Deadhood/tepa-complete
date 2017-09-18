@@ -4,15 +4,14 @@ html(lang='en')
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width,initial-scale=1,shrink-to-fit=no')
     meta(name='theme-color', content='#000000')
-    link(rel='manifest', href='/manifest.json')
+    link(rel='manifest', href='/assets/manifest.json')
     if htmlWebpackPlugin
       title= htmlWebpackPlugin.options.title
     else
       title Admin
-    if !htmlWebpackPlugin
-      link(href='/static/bundle.css', rel='stylesheet')
+    if !htmlWebpackPlugin && process.env.NODE_ENV === 'production'
+      link(href='/assets/static/bundle.css', rel='stylesheet')
   body
     noscript You need to enable JavaScript to run this app.
     #root
-    if !htmlWebpackPlugin    
-      script(type='text/javascript', src='/static/bundle.js')
+    script(type='text/javascript', src='/assets/static/bundle.js')

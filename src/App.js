@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { withRR4, Nav, NavIcon, NavText } from 'react-sidenav'
-
-import { Route, withRouter } from 'react-router-dom'
+import { Route, withRouter, Redirect } from 'react-router-dom'
 
 // Icons
 import MdGroupAdd from 'react-icons/lib/md/group-add'
 import MdViewList from 'react-icons/lib/md/view-list'
 import MdAddBox from 'react-icons/lib/md/add-box'
+import MdRemoveCircle from 'react-icons/lib/md/remove-circle'
 
 import './App.css'
 
@@ -26,7 +26,7 @@ class App extends Component {
   render () {
     return (
       <div className='App'>
-        <div className='col-sm-3'>
+        <div className='col-sm-2'>
           <div
             className='sidenav-custom'
             style={{
@@ -34,7 +34,7 @@ class App extends Component {
             }}
           >
             <SideNav
-              defaultSelected='add'
+              defaultSelected={this.props.location.pathname.slice(1)}
               highlightBgColor='#111'
               hoverBgColor='#111'
               highlightColor='white'
@@ -51,15 +51,34 @@ class App extends Component {
                 <NavIcon><MdAddBox /></NavIcon>
                 <NavText>Tax Calculations</NavText>
               </Nav>
+              <Nav id='logout'>
+                <NavIcon><MdRemoveCircle /></NavIcon>
+                <NavText><a href='/logout'>Logout</a></NavText>
+              </Nav>
             </SideNav>
+            <img
+              src='/assets/mujib.png'
+              alt='Sheikh Mujibur Rahman'
+              id='mujib'
+            />
           </div>
         </div>
-        <div className='col-sm-9 container-fluid'>
-          <div className='well'>{this.dataStore.message}</div>
-          <Route exact path='/' component={BalagForm} />
+        <div className='col-sm-10 container-fluid'>
+          <div className='text-center'>
+            <img src='/assets/banner.jpg' alt='আমার বাংলাদেশ' id='banner' />
+          </div>
+          {this.dataStore.message.length > 0 &&
+            <div className='well'>{this.dataStore.message}</div>}
+          <Route exact path='/' render={() => <Redirect to='/add' />} />
           <Route path='/add' component={BalagForm} />
           <Route path='/list' component={List} />
           <Route path='/tax' component={Tax} />
+          <Route
+            path='/logout'
+            render={() => (
+              <div>{Object.assign(window, { location: '/logout' })}</div>
+            )}
+          />
         </div>
       </div>
     )

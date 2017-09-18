@@ -24,3 +24,36 @@
   left: 0;
   padding: 0;
 }
+
+form {
+  font-family: Mukti, sans-serif !important;
+}
+
+.sidenav-custom a[href*=logout]:hover {
+  text-decoration: none;
+}
+
+.sidenav-custom a[href*=logout] {
+  color: #333;
+}
+.sidenav-custom a[href*=logout]:focus,
+.sidenav-custom a[href*=logout]:active,
+.sidenav-custom a[href*=logout]:hover {
+  color: #f12;
+}
+
+.sidenav-custom > div > div:nth-child(4):hover div a {
+  color: #f12;
+}
+
+.sidenav-custom #mujib {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+#banner {
+  width: 100%;
+  height: 145px;
+  margin: 10px auto;
+}

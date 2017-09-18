@@ -25,9 +25,10 @@ class BalagForm extends Component {
     )
   }
 
-  _handleSubmit = ({ formData }) => {
+  _handleSubmit = async ({ formData }) => {
     Object.assign(this.props.dataStore, { formData })
-    fetch('/add', {
+
+    const res = await fetch('/record', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json'
@@ -35,21 +36,18 @@ class BalagForm extends Component {
       body: JSON.stringify(this.props.dataStore.formData),
       credentials: 'same-origin'
     })
-      .then(res => {
-        if (res.status === 200) {
-          this.props.dataStore.message = 'Success'
-          formData = {}
-          this.setState({ fd: null })
-        } else {
-          this.props.dataStore.message = 'Failed'
-          throw new Error('Failed')
-        }
-        document.body.scrollTop = 0
-      })
-      .catch(e => {
-        this.props.dataStore.message = 'Failed'
-        document.body.scrollTop = 0
-      })
+
+    if (res.status === 200) {
+      formData = {}
+      this.props.dataStore.message = 'Success'
+      setTimeout(() => {
+        this.props.dataStore.message = ''
+      }, 5000)
+      this.setState({ fd: {} })
+    } else {
+      this.props.dataStore.message = 'Failed'
+    }
+    window.scrollTo(0, 0)
   }
 }
 
