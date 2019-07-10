@@ -43,7 +43,7 @@
     "morgan": "^1.7.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
-    "pug": "^2.0.0-rc.1",
+    "pug": "^2.0.4",
     "ramda": "^0.24.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
