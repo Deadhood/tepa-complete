@@ -46,7 +46,7 @@
     "pug": "^2.0.4",
     "ramda": "^0.26.1",
     "react": "^15.6.2",
-    "react-dom": "^15.6.1",
+    "react-dom": "^15.6.2",
     "react-icons": "^3.7.0",
     "react-json-tree": "^0.10.9",
     "react-jsonschema-form": "^1.6.1",
