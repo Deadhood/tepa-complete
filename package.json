@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/rustysec/node-passportjs-rethinkdb-local#readme",
   "dependencies": {
-    "babel-polyfill": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "bootswatch": "^4.3.1",
